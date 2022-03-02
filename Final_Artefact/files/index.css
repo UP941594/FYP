@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@200;300&display=swap');
+
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: 'Roboto Slab', serif;
+font-size: 50px;
+}
+.nav {background-color: #8DCBFB;}
+
+.nav div{
+display: inline-block;
+padding: 10px;
+margin-right: 10px;
+margin-left: 5px;
+border-right: 2px solid white;
+border-left: 2px solid white;
+/* font-size: 20px; */
+}
+
+.main * {
+  display: table;
+}
+
+#measuringState {
+  padding: 20px;
+  margin: 5% 25% 5% 25%;
+  font-weight: 800;
+  color: blue;
+}
+
+#ss {
+  color: blue;
+  width: 50%;
+  min-width: 40%;
+  right: 10%;
+  margin: 10px 5px;
+  padding: 20px;
+  font-weight: 600;
+  text-align: center;
+  margin: 5% 25% 5% 25%;
+  border: none;
+  font-weight: bold;
+}
+
+.accMain *, .gyroMain * {
+  display: table;
+  margin: 5px;
+}
+
+.gpsMain * {
+  display: table;
+  margin: 5px;
+}
+
+.accMain, .gyroMain, .gpsMain {
+  margin-bottom: 30px
+}
