@@ -55,14 +55,16 @@ function displayHotEnc(hotEncoding) {
 async function testModel(test, testedData, length) {
   const model = await tf.loadLayersModel('file://./model-1a/model.json')
   let results = await model.predict(test);
-  console.log(results);
+  // console.log(results);
   const resultsInChunks = displayHotEnc(results)
+  console.log(resultsInChunks);
   const idenfiedEvents = []
   const percentage = [];
   testedData.forEach((item, i) => {
     const tot = showResults(resultsInChunks[i]);
     idenfiedEvents.push('ML: ' + tot )
-    console.log('ML: ' + tot, 'Expected: '+ item[1]);
+    // console.log('ML: ' + tot, 'Expected: '+ item[1]);
+    // console.log('ML: ' + tot);
     percentage.push(tot + '' +  item[1])
   });
   const success = showPercentage(percentage, length);

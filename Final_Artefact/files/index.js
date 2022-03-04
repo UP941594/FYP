@@ -128,10 +128,15 @@ async function changeButtonState() {
     const extractedEvents = modifyEvents(extractEvents(allEvents));
     const extractedBrakingEvents = modifyEvents(extractEvents(brakeEvents));
     const bothEventsType = extractedEvents.concat(extractedBrakingEvents);
+    const events = {
+      normal: extractedEvents,
+      braking: extractedBrakingEvents,
+      gps: gpsEvents
+    }
     const response = await fetch('/data', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(gpsEvents)
+      body: JSON.stringify(events)
       // body: JSON.stringify(bothEventsType)
     }).then(async function() {
         await showResultsUI();
@@ -146,7 +151,7 @@ function modifyEvents(data) {
   return data.map((item) => {
     return [item.map((each) => {
       const per = 1000/60;
-      return each/per
+      return (each/per)/10
     }),0]
   })
 }
