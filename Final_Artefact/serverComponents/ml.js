@@ -55,14 +55,16 @@ function displayHotEnc(hotEncoding) {
 async function testModel(test, testedData, length) {
   const model = await tf.loadLayersModel('file://./model-1a/model.json')
   let results = await model.predict(test);
-  // console.log(results);
-  const resultsInChunks = displayHotEnc(results)
-  console.log(resultsInChunks);
-  const idenfiedEvents = []
+
+  const resultsInChunks = displayHotEnc(results);
+  const idenfiedEvents = [];
   const percentage = [];
   testedData.forEach((item, i) => {
     const tot = showResults(resultsInChunks[i]);
-    idenfiedEvents.push('ML: ' + tot )
+    if(tot[0] === 0) { idenfiedEvents.push({eventType: 'LEFT CURVE', eventLevel: tot[1]}) }
+    if(tot[0] === 1) { idenfiedEvents.push({eventType: 'RIGHT CURVE', eventLevel: tot[1]}) }
+    if(tot[0] === 2) { idenfiedEvents.push({eventType: 'NON AGGRESSIVE', eventLevel: tot[1]}) }
+    if(tot[0] === 3) { idenfiedEvents.push({eventType: 'BRAKING', eventLevel: tot[1]}) }
     // console.log('ML: ' + tot, 'Expected: '+ item[1]);
     // console.log('ML: ' + tot);
     percentage.push(tot + '' +  item[1])
@@ -75,7 +77,7 @@ async function testModel(test, testedData, length) {
 function showResults(res) {
   const result = res.map(each => each * 100);
   const max = Math.max(...result)
-  return result.indexOf(max)
+  return [result.indexOf(max), Number(max.toFixed(1))]
 }
 
 function showPercentage(perc, len) {

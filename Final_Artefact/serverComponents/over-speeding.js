@@ -6,6 +6,7 @@ import haversine from 'haversine';
 // 1. findSpeedIntervals function copy from data.js for real testing;
 // 2. matchSingleRoadSpeed function needs less than road speed not bigger;
 // 3. getallRoads function should get called frequently
+// 4. yourSpeed: (eachRoad[0].speed) + ' mph', use tofixed()
 
 
 // FIRST PARAM = ALL COLLECTED GPS COORDINATES DURING JOURNEY
@@ -75,23 +76,26 @@ function findMaxRadius(coords) {
 export async function calculateSpeed(coords, seconds) {
   // STORES ALL RELEVANT ROADS INTO ARRAY FOR OVER-SPEEDING MEASUREMENT
   // const allRoadsData = await getallRoads(findMaxRadius(coords));
-  fs.readFile('allRoads.json', 'utf8', async function (err, data) {
-    if (err) throw err;
-    let allRoadsData = await JSON.parse(data);
-    console.log('ALL ROADS: ' + allRoadsData.elements.length);
-    const exceededIntervals = findSpeedIntervals(coords, seconds, 0);
-    if(exceededIntervals.length > 0) {
-      console.log('EXCEEDED: ' + exceededIntervals.length);
-      for(const each of exceededIntervals) {
-        const eachRoadCalculation = await matchSingleRoadSpeed(allRoadsData, each);
-        console.log(eachRoadCalculation);
-      }
-    } else {
-      console.log('EXCEEDED: ' + exceededIntervals.length);
+  function fileContent(path, format) {
+    return new Promise(function (resolve, reject) {
+      fs.readFile(path, format, function(error, contents) {
+        if (error) reject(error);
+        else resolve(contents);
+      });
+    });
+  }
+  let allRoadsData = JSON.parse(await fileContent('allRoads.json', 'utf8'));
+  // console.log('ALL ROADS: ' + allRoadsData.elements.length);
+  const exceededIntervals = await findSpeedIntervals(coords, seconds, 0);
+  const allIntervals = [];
+  if(exceededIntervals.length > 0) {
+    // console.log('EXCEEDED: ' + exceededIntervals.length);
+    for(const each of exceededIntervals) {
+      const eachRoadCalculation = await matchSingleRoadSpeed(allRoadsData, each);
+      allIntervals.push(eachRoadCalculation)
     }
-    return 'DONE'
-  });
-    return 'POSTED'
+  }
+  return allIntervals
 }
 
 // THIS FUNCTION GET EXCEEDED SPEED ROADS
@@ -114,16 +118,16 @@ async function matchSingleRoadSpeed(allroads, eachRoad) {
           return {
             roadName: res1.name,
             roadSpeed: res1.maxspeed,
-            yourSpeed: (eachRoad[0].speed) + ' mph',
+            yourSpeed: (eachRoad[0].speed).toFixed(2) + ' mph',
             time: eachRoad[0].time
           }
         }
       } else {
-        return 'IGNORE CUZ BOTH ROADS SPEED NOT AVAILABLE IN DATABASE'
+         console.log('IGNORE CUZ BOTH ROADS SPEED NOT AVAILABLE IN DATABASE');
       }
     } else {
-      return 'TRAVELLED ON 2 ROADS SO CANNNOT CALCULATE'
+       console.log('TRAVELLED ON 2 ROADS SO CANNNOT CALCULATE');
     }
   }
-  return 'NO SPEED LIMIT EXCEEDED'
+  return {}
 }

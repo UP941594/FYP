@@ -23,3 +23,17 @@ function findSpeedIntervals(coords, secs, minSpeed) {
   }
   return exceededIntervals
 }
+
+writeCSV(req.body)
+function writeCSV(data) {
+data = data[0][0];
+let file = ''
+for(const each of data) {
+  file += each;
+  file += '\n'
+};
+fs.writeFile('my.csv', file, (err) => {
+  if (err) throw err;
+  console.log('my.csv saved.');
+});
+}

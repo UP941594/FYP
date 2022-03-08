@@ -3,7 +3,6 @@ import haversine from 'haversine';
 // FOCUS ON MULTIPLE INTERVALS BECAUSE CAR COULD STOP AND ACCELRRATE MANY TIMES DURING A JOURNEY
 export function showDistance(allCoords, extractedCoords, secs, limit) {
   const allAcceleration = []
-    console.log(allCoords.length, extractedCoords.length);
     extractedCoords.forEach((coor) => {
       const res = allCoords.find(item => {
         return item.time === coor.time + secs
