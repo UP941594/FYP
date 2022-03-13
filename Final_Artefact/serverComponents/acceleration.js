@@ -11,7 +11,7 @@ export function showDistance(allCoords, extractedCoords, secs, limit) {
         let [start, end] = [{latitude: coor.lat, longitude: coor.lon}, {latitude: res.lat, longitude: res.lon}];
         const acc = haversine(start, end, {unit: 'mile'}) * (3600/secs);
         if(acc > limit) {
-          allAcceleration.push({accSpeed: acc, time: res.time});
+          allAcceleration.push({speed: (acc).toFixed(2) + ' mph', time: res.time});
         }
       }
     });

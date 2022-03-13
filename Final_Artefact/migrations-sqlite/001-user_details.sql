@@ -1,22 +1,43 @@
 -- Up
 
 CREATE TABLE User (
-  id NOT NULL PRIMARY KEY,
+  userId NOT NULL PRIMARY KEY,
   name NOT NULL,
   username NOT NULL,
-  university NOT NULL,
-  course NOT NULL,
-  joindate NOT NULL,
-  points
+  joindate NOT NULL
 );
 
-CREATE TABLE File (
-  id NOT NULL PRIMARY KEY,
-  user_id NOT NULL,
-  name NOT NULL,
-  sharedWithPeers,
-  joindate NOT NULL,
-  secs NOT NULL
+CREATE TABLE Maneuver (
+  eventId NOT NULL,
+  userId NOT NULL,
+  eventType,
+  aggression,
+  eventDate
+);
+
+CREATE TABLE Braking (
+  eventId NOT NULL,
+  userId NOT NULL,
+  eventType,
+  aggression,
+  eventDate
+);
+
+CREATE TABLE Acceleration (
+  eventId NOT NULL,
+  userId NOT NULL,
+  speed,
+  eventTime,
+  eventDate
+);
+
+CREATE TABLE Overspeeding (
+  eventId NOT NULL,
+  userId NOT NULL,
+  roadName,
+  roadSpeed,
+  yourSpeed,
+  eventDate
 );
 
 -- Down

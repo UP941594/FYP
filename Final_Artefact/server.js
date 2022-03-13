@@ -20,15 +20,23 @@ const httpsOptions = {
   cert: fs.readFileSync('key/cert.pem')
 };
 
-
 app.get('/data', async (req, res) => {
-  return res.json(dataset);
+  // console.log(await db.testing());
+   res.json(dataset);
 });
+
+app.get('/:userId/:date', async (req, res) => {
+  const getJourney = await db.getDayJourney(req.params.userId, req.params.date);
+  console.log(getJourney);
+  res.json(getJourney);
+
+})
 
 // GPS LOCATION ACCESSES 60 DATASETS IN ONE SECONDS WITH DATA IN VARIANCE
 // MEANING THE GPS COORDINATES ARE ACCURATE
 app.post('/data', bodyParser({limit: '1gb'}), async (req, res) => {
   console.log('Size: ', req.get("content-length")/1000000);
+  console.log(req.body.date);
   // console.log(req.body);
   // ARG 1: ALL COLLECTED CORRDS // ARG 2: EACH LAT/LONG IS 14 DIGITS LONG SO WE ONLY CONSIDERING FIRST 6
   const extracted = await acc.extractGPSlocations(req.body.gps, 6);
@@ -47,7 +55,21 @@ app.post('/data', bodyParser({limit: '1gb'}), async (req, res) => {
   // ARG 1: ALL GPS COORDS // ARG 2: TIME GAP TO MEASURE SPEED IN SECS
   const overSpeed = await speed.calculateSpeed(req.body.gps, 1);
   console.log(overSpeed);
+    console.log('--------------------------------------------------');
   // return res.json()
+  const journeyEvents = {
+    userId: req.body.userId,
+    eventId: undefined,
+    maneuver: extractBrakeANDOtherEvents(testModel, 'NON AGGRESSIVE'),
+    braking: extractBrakeANDOtherEvents(testBraking, 'BRAKING'),
+    acceleration: showDistance,
+    overspeeding: overSpeed,
+    eventDate: req.body.date
+  };
+  console.log(journeyEvents);
+  const postEventData = await db.storeJourney(journeyEvents);
+  console.log(postEventData);
+  res.json()
 });
 
 

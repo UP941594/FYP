@@ -2,6 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Measure Driver Behaviour</title>
     <link rel="stylesheet" href="/index.css">
   </head>
@@ -21,7 +22,29 @@
 
 
       <div class="results">
-
+        <div class="date">
+          <input id="date" type="date" name="result-date" value="2022-03-14">
+          <select id="selectJourney" name="university">
+            <option hidden>Weekly</option>
+            <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+          </select>
+        </div>
+        <label class="eventlabel" for="rating"> Overall Rating : </label>
+        <div class="overallRating">
+        </div>
+        <label id="speed" class="eventlabel" for="rating"> Over-speeding : </label>
+        <div class="overspeeding">
+        </div>
+        <label id="acc" class="eventlabel" for="rating"> Acceleration : </label>
+        <div class="acceleration">
+        </div>
+        <label id="turning" class="eventlabel" for="rating"> Maneuvers : </label>
+        <div class="maneuver">
+        </div>
+        <label id="brake" class="eventlabel" for="rating"> Braking : </label>
+        <div class="braking">
+        </div>
       </div>
 
     <script src="result.js" type="module"></script>

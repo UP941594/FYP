@@ -27,7 +27,7 @@ async function getPermission() {
         changeButtonState();
       },(err)=>{if(err){
           document.location.href = "App-prefs://prefs:root=Settings"
-          // alert(window.location);
+          alert('Location Not Found');
           // location = false
         }
       })
@@ -128,15 +128,19 @@ async function changeButtonState() {
     const extractedEvents = modifyEvents(extractEvents(allEvents));
     const extractedBrakingEvents = modifyEvents(extractEvents(brakeEvents));
     const bothEventsType = extractedEvents.concat(extractedBrakingEvents);
-    const events = {
+    // new Date().toISOString().split('T')[0]
+    const eventData = {
+      userId: 'abcd',
+      eventId: undefined,
       normal: extractedEvents,
       braking: extractedBrakingEvents,
-      gps: gpsEvents
+      gps: gpsEvents,
+      date: new Date().toISOString().split('T')[0]
     }
     const response = await fetch('/data', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(events)
+      body: JSON.stringify(eventData)
       // body: JSON.stringify(bothEventsType)
     }).then(async function() {
         await showResultsUI();
