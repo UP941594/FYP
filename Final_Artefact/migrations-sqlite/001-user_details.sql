@@ -4,6 +4,7 @@ CREATE TABLE User (
   userId NOT NULL PRIMARY KEY,
   name NOT NULL,
   username NOT NULL,
+  course NOT NULL,
   joindate NOT NULL
 );
 

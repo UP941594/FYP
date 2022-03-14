@@ -15,6 +15,13 @@ export async function getDetails(table) {
   return get;
 }
 
+export async function addUserAccount(user) {
+  const db = await init();
+  user.id = uuid();
+  await db.run('INSERT INTO User VALUES (?,?,?,?,?)', [user.id, user.name, user.username, user.course, user.join_date]);
+  return getDetails('User');
+}
+
 export async function getDayJourney( userId, date) {
   const db = await init();
   let days = 0

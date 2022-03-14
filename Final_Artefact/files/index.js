@@ -1,219 +1,179 @@
-const button = document.querySelector('#ss');
-const measuringState = document.querySelector('#measuringState');
-let measuring = false;
-let [deviceMotion, location] = [false, false];
-let int,interval;
-const allEvents = [];
-const brakeEvents = [];
-const gpsEvents = [];
-let counter = 1
+const nameInput = document.querySelector('#name');
+const usernameInput = document.querySelector('#username');
+const submit = document.querySelector('#submit');
+const suggestion = document.querySelector('#suggestion');
+const suggest = document.querySelector('#suggest');
+const warn = document.querySelector('#warn');
+const loginLink = document.querySelector('#loginLink');
+const selectCourse = document.querySelector('.selectCourse');
 
-function detectMobile() {
-  const matchingMobile = [/iPhone/i, /iPad/i, /iPod/i];
-  return matchingMobile.some(each => navigator.userAgent.match(each))
-}
-//App-prefs://prefs:root=Settings
-async function getPermission() {
-  // document.location.href = "App-prefs://prefs:root=Settings"
-  const response = await DeviceMotionEvent.requestPermission();
-  if(response == 'granted') {
-    deviceMotion = true
-    if(navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        location = true
-        if(measuring === false) {
-          alert('All Permission Given!');
-        }
-        changeButtonState();
-      },(err)=>{if(err){
-          document.location.href = "App-prefs://prefs:root=Settings"
-          alert('Location Not Found');
-          // location = false
-        }
-      })
-    }
+// checks for any length of empty string
+const emptySpaceChecker = /^ *$/;
+
+// validates all the input fields before signing up
+async function validate() {
+  const name = nameInput.value.trim();
+  const user = {
+    id: null,
+    name: name.substring(0, 1).toUpperCase() + name.substring(1),
+    username: usernameInput.value.trim(),
+    course: selectCourse.value,
+    join_date: new Date().toISOString(),
+  };
+  if (emptySpaceChecker.test(user.name) || emptySpaceChecker.test(user.username)) {
+    makeRedBorder(nameInput, usernameInput);
+    warn.textContent = 'Field missing';
+    return false;
+  } if (await checkUsername(user.username) === false) {
+    warn.textContent = 'username already exists';
+    return false;
   } else {
-    alert('Motion Permission Denied. PLEASE Reload Safari to Start Again!')
-  }
-}
-
-async function measureBehaviour() {
-  if(detectMobile()) {
-    await getPermission();
-  } else {
-    if(navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        location = true
-        if(measuring === false) {
-          alert('All Permission Given!');
-        }
-        changeButtonState();
-      },(err)=>{
-        if(err){
-          alert('Give Location Permission');
-          location = false
-      }})
-    }
-  }
-}
-
-const accMain = document.querySelector('.accMain');
-const gyroMain = document.querySelector('.gyroMain');
-const gpsMain = document.querySelector('.gpsMain');
-const timer = document.querySelector('#timer');
-const results = document.querySelector('.results')
-
-
-// Sensor data frequency equals 60 times per second.
-function sensorData(event) {
-  // console.log(e);
-  // MOBILE DEVICES
-  if(location === true && deviceMotion === true) {
-    if(measuring) {
-      getGPS()
-      getSensorAxis(event)
-    }
-  }
-  // LAPTOP DEVICES FOR TESTING
-  if(measuring && detectMobile() === false) {
-      getGPS()
-      getSensorAxis(event)
-  }
-}
-
-// DISPLAYS MOTION DATA AND PUTS INTO ARRAY ==MAIN FUNCTION
-function getSensorAxis(e) {
-    accMain.childNodes[3].textContent = 'X: ' + e.accelerationIncludingGravity.x.toFixed(2);
-    accMain.childNodes[5].textContent = 'Y: ' + e.accelerationIncludingGravity.y.toFixed(2);
-    accMain.childNodes[7].textContent = 'Z: ' + e.accelerationIncludingGravity.z.toFixed(2);
-    gyroMain.childNodes[3].textContent = 'X: ' + e.rotationRate.alpha.toFixed(2);
-    gyroMain.childNodes[5].textContent = 'Y: ' + e.rotationRate.beta.toFixed(2);
-    gyroMain.childNodes[7].textContent = 'Z: ' + e.rotationRate.gamma.toFixed(2);
-    allEvents.push(e.rotationRate.beta);
-    brakeEvents.push(e.accelerationIncludingGravity.y)
-}
-// DISPLAYS GPS DATA AND PUTS INTO ARRAY ==MAIN FUNCTION
-function getGPS() {
-  if(navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      gpsMain.childNodes[3].textContent = 'Latitude : ' + position.coords.latitude;
-      gpsMain.childNodes[5].textContent = 'Longitude : ' + position.coords.longitude;
-      gpsEvents.push({lat: position.coords.latitude, lon: position.coords.longitude, time: Math.round(Date.now() / 1000)})
-    })
-  }
-}
-
-async function changeButtonState() {
-  if(!measuring) {
-    button.textContent = 'STOP';
-    button.style.color = 'red'
-    measuringState.textContent = 'Measuring'
-    measuringDisplay()
-    measuring = true
-    interval = setInterval(function() {
-    timer.textContent = 'Timer : ' + Number(counter)
-      counter += 0.5
-    },500);
-  } else {
-    clearInterval(int);
-    clearInterval(interval)
-    button.textContent = 'START';
-    button.style.color = 'blue'
-    measuringState.textContent = 'Not measuring';
-    measuring = false;
-    alert(`${allEvents.length}`);
-    counter = 0;
-    timer.textContent = 'Timer : ' + Number(counter);
-    // downloadObjectAsJson(extractEvents(allEvents), 'LeftCurve')
-    const extractedEvents = modifyEvents(extractEvents(allEvents));
-    const extractedBrakingEvents = modifyEvents(extractEvents(brakeEvents));
-    const bothEventsType = extractedEvents.concat(extractedBrakingEvents);
-    // new Date().toISOString().split('T')[0]
-    const eventData = {
-      userId: 'abcd',
-      eventId: undefined,
-      normal: extractedEvents,
-      braking: extractedBrakingEvents,
-      gps: gpsEvents,
-      date: new Date().toISOString().split('T')[0]
-    }
-    const response = await fetch('/data', {
+    const response = await fetch('users', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(eventData)
-      // body: JSON.stringify(bothEventsType)
-    }).then(async function() {
-        await showResultsUI();
-        allEvents.length = 0;
-        brakeEvents.length = 0;
-        gpsEvents.length = 0;
-    }())
+      body: JSON.stringify(user)
+    });
+    warn.textContent = '';
+    nameInput.value = '';
+    usernameInput.value = '';
+    replaceLoginField();
   }
 }
-// SORTING GYROSCOPE AXIS TO ROTATIONAL SPEED NOT RATE
-function modifyEvents(data) {
-  return data.map((item) => {
-    return [item.map((each) => {
-      const per = 1000/60;
-      return (each/per)/10
-    }),0]
-  })
-}
 
-
-// TURNS ALL SENSORY DATA INTO CHUNKS
-function extractEvents(listOfEvents) {
-  const array = Array.from(listOfEvents);
-  const value = Math.floor(listOfEvents.length/236)
-  console.log(value);
-  Array.prototype.chunk = function ( n ) {
-    if ( !this.length ) {
-      return [];
-    }
-    return [ this.slice( 0, n ) ].concat( this.slice(n).chunk(n) );
-  };
-  const res = array.chunk(236);
-  if(res.length > 1) {
-    if(res[res.length-1].length < 236) {
-      return res.slice(0,res.length-1);
-    }
+// Suggests a suitable username
+let interval;
+let random;
+let char;
+usernameInput.addEventListener('focus', () => {
+  if (emptySpaceChecker.test(nameInput.value)) {
+    nameInput.style.borderColor = 'red';
+  } else {
+    suggestion.style.display = 'block';
+    suggest.style.display = 'block';
+    random = Math.round(Math.random() * 10000);
+    char = nameInput.value.split(' ')[0].trim();
+    suggestion.textContent = char + random;
+    interval = setInterval(() => {
+      random = Math.round(Math.random() * 10000);
+      char = nameInput.value.split(' ')[0].trim();
+      suggestion.textContent = char + random;
+    }, 2000);
   }
-  return res
-}
+});
 
-const arr = [[1,2,3], [1,2]]
+suggestion.addEventListener('click', () => {
+  usernameInput.value = suggestion.textContent;
+  clearInterval(interval);
+  suggestion.style.display = 'none';
+  suggest.style.display = 'none';
+  usernameInput.style.borderColor = 'grey';
+});
 
-
-
-function measuringDisplay() {
- int = setInterval(function(){
-      if(measuringState.textContent.length > 11) {
-        measuringState.textContent = 'Measuring'
-      } else {
-        measuringState.textContent = measuringState.textContent + '.'
+async function checkUsername(username) {
+  const response = await fetch('users');
+  if (response.ok) {
+    const users = await response.json();
+    for (const user of users) {
+      if (user.username === username) {
+        return false;
       }
-    },1000)
-}
-
-async function showResultsUI() {
-  const res = await fetch('/data');
-  if(res.ok) {
-    const data = await res.json();
-    alert(data)
+    }
+    return true;
   }
 }
 
-button.addEventListener('click', measureBehaviour);
-// IOS DEVICE MOTION EVENT
-window.addEventListener('devicemotion', sensorData)
+// If any of input field missing value
+function makeRedBorder(name, username) {
+  if (emptySpaceChecker.test(name.value)) {
+    name.style.borderColor = 'red';
+  }
+  if (emptySpaceChecker.test(username.value)) {
+    username.style.borderColor = 'red';
+  }
+}
 
-/////////////////////////////////////////////////////////////////////////
-function downloadObjectAsJson(exportObj, exportName){
-   const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
-   const downloadAnchorNode = document.createElement('a');
-   downloadAnchorNode.setAttribute("href",     dataStr);
-   downloadAnchorNode.setAttribute("download", exportName + ".json");
-   accMain.appendChild(downloadAnchorNode); // required for firefox
-   downloadAnchorNode.click();
-   downloadAnchorNode.remove();
- }
+// when user has field missing, when they start adding data then field border goes back to grey
+function greyBorder(elem) {
+  elem.addEventListener('input', () => {
+    if (elem.value.length > 1) {
+      elem.style.borderColor = 'grey';
+    } if (elem.value.length >= 5) {
+      elem.style.borderColor = 'grey';
+      warn.textContent = '';
+    }
+  });
+}
+
+
+// replaces sign up content with login content
+function replaceLoginField() {
+  const top = document.querySelector('.top');
+  const main = document.querySelector('.main');
+  const loginDiv = document.querySelector('.loginDiv');
+
+  if (loginLink.textContent === ' Login ') {
+    main.style.display = 'none';
+    top.appendChild(loginDiv);
+    loginDiv.style.display = 'block';
+    loginDiv.style.paddingBottom = '60px';
+    loginLink.textContent = 'Sign up';
+  } else {
+    loginDiv.style.display = 'none';
+    main.style.display = 'block';
+    loginLink.textContent = ' Login ';
+  }
+}
+loginLink.addEventListener('click', replaceLoginField);
+
+// Validates LOGIN details
+const usernameLOG = document.querySelector('#usernameLOG');
+const selectCourseLOG = document.querySelector('.selectCourseLOG');
+const submitLOG = document.querySelector('#submitLOG');
+const warnLOG = document.querySelector('#warnLOG');
+
+submitLOG.addEventListener('click', logUserIn);
+
+async function logUserIn() {
+  const response = await fetch('users');
+  if (response.ok) {
+    const users = await response.json();
+    let currentUser;
+    const client = {
+      username: usernameLOG.value,
+      course: selectCourseLOG.value
+    };
+    let exist = false;
+    for (const user of users) {
+      if (client.username === user.username && client.course === user.course) {
+        exist = true;
+        currentUser = user;
+      }
+    }
+    if (!exist) {
+      warnLOG.textContent = 'Incorrect details entered';
+      usernameLOG.value = '';
+    } else {
+      const user = { id: currentUser.userId, status: 'in' };
+      console.log(user);
+      localStorage.setItem('user', JSON.stringify(user));
+      window.location = `/monitor.html#${currentUser.userId}`;
+    }
+  }
+}
+
+function callIt(div, func) {
+  div.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      func()
+    }
+  });
+}
+
+function init() {
+  callIt(usernameLOG, logUserIn);
+  callIt(usernameInput, validate);
+  submit.addEventListener('click', validate);
+  greyBorder(nameInput);
+  greyBorder(usernameInput);
+}
+init()

@@ -20,6 +20,16 @@ const httpsOptions = {
   cert: fs.readFileSync('key/cert.pem')
 };
 
+// USER ACCOUNTS HANDLERS
+app.get('/users', async (req, res) => {
+  const details = await db.getDetails('User');
+  res.json(details);
+});
+app.post('/users', express.json(), async (req, res) => {
+  const addUser = await db.addUserAccount(req.body);
+  res.json(addUser);
+});
+
 app.get('/data', async (req, res) => {
   // console.log(await db.testing());
    res.json(dataset);
@@ -27,7 +37,6 @@ app.get('/data', async (req, res) => {
 
 app.get('/:userId/:date', async (req, res) => {
   const getJourney = await db.getDayJourney(req.params.userId, req.params.date);
-  console.log(getJourney);
   res.json(getJourney);
 
 })

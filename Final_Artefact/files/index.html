@@ -10,48 +10,59 @@
 
       <nav class="nav">
         <div class="header">
-          <a id="homeLink">Home</a>
-        </div>
-        <div class="header">
-          <a href="result.html" id="homeLink">Results</a>
+          <a href="/" id="homeLink">Home</a>
         </div>
         <div class="header">
           <p id="loginLink"> Login </p>
         </div>
       </nav>
 
+      <div class="top">
       <div class="main">
-        <button id="ss" type="button" name="button">START</button>
-        <span id="measuringState"> Not measuring </span>
-      </div>
+        <h2 id="heading">Sign Up</h2>
+        <hr>
 
-      <p id="timer">Timer : 0</p>
-      <div class="accMain">
-        <h3>Accelerometer Data: </h3>
-        <span>X : </span>
-        <span>Y : </span>
-        <span>Z : </span>
-      </div>
+        <label for="course">Choose a car:</label>
+        <select class="selectCourse" name="cars">
+          <option value="Audi">Audi</option>
+          <option value="BMW">BMW</option>
+          <option value="Honda">Honda</option>
+          <option value="Volkswagen">Volkswagen</option>
+          <option value="Ferrari">Ferrari</option>
+          <option value="Toyota">Toyota</option>
+        </select>
 
-      <div class="gyroMain">
-        <h3>Gyroscope Data: </h3>
-        <span>X : </span>
-        <span>Y : </span>
-        <span>Z : </span>
-      </div>
+        <input id="name" type="text" placeholder="Full name">
+        <span id="suggest">Use suggested username:</span>
+        <span id="suggestion"> </span>
+        <input id="username" type="text" placeholder="Username">
+        <span id="warn"></span>
 
-      <div class="gpsMain">
-        <h3>GPS data: </h3>
-        <span>Latitude : </span>
-        <span>Longitude : </span>
+        <button id="submit"type="button">Sign Up</button>
       </div>
+    </div>
 
-      <div class="results">
+    <!-- LOG IN Div-->
+    <div class="loginDiv">
 
-      </div>
+      <h2 id="heading">Log in</h2>
+
+      <label for="course">Choose a course:</label>
+      <select class="selectCourseLOG" name="cars">
+        <option value="Audi">Audi</option>
+        <option value="BMW">BMW</option>
+        <option value="Honda">Honda</option>
+        <option value="Volkswagen">Volkswagen</option>
+        <option value="Ferrari">Ferrari</option>
+        <option value="Toyota">Toyota</option>
+      </select>
+      <input id="usernameLOG" type="text" placeholder="Username">
+
+      <span id="warnLOG"></span>
+      <button id="submitLOG"type="button">Log in</button>
+    </div>
 
     <script src="index.js" type="module"></script>
-    <script src="test.js" type="module"></script>
 
   </body>
 </html>

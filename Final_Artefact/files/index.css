@@ -54,7 +54,7 @@ font-size: 20px;
   float: left;
   font-size: 18px;
   margin: 10px 0;
-  padding: 10px 0
+  padding: 10px 0;
 }
 
 #selectJourney {
@@ -66,10 +66,106 @@ font-size: 20px;
   padding: 10px 0
 }
 
-.overallRating .rating:nth-of-type(4) {
+/* .overallRating .rating:nth-of-type(4) {
   background-color: #B5FFC9;
+} */
+
+/* Sign up area starts here  */
+
+.top div {
+margin: 10px;
+position: relative;
+padding: 10px 10px 60px 10px;
+border: 1px solid black;
+width: 95%;
+float: right
 }
 
+
+.top label {
+display: table;
+margin: 10px 5px;;
+font-size: 15px;
+margin-bottom: 0px;
+width: 90%;
+font-weight: bold
+}
+
+.top select {
+display: table;
+font-size: 15px;
+margin: 10px 5px;
+margin-top: 0;
+width: 90%;
+padding: 10px;
+padding-left: 5px
+}
+
+.top .main input{
+display: table;
+margin: 10px 5px;
+font-size: 15px;
+padding: 10px;
+width: 90%;
+max-width: 60%
+min-width: 50%;
+}
+
+#suggestion, #suggest {
+  display: table;
+  margin: 10px 5px;
+  font-size: 15px;
+  padding: 10px;
+  width: 90%;
+  max-width: 60%
+  min-width: 50%;
+}
+
+#usernameLOG {
+  display: table;
+  margin: 10px 5px;
+  font-size: 15px;
+  padding: 10px;
+  width: 90%;
+  max-width: 60%
+  min-width: 50%;
+}
+
+.top div button {
+width: 50%;
+float: right;
+min-width: 40%;
+right: 10%;
+margin: 10px 5px;
+font-size: 15px;
+padding: 10px;
+}
+
+#suggestion {
+display: none;
+cursor: pointer;
+margin: 0;
+font-weight: bold;
+}
+
+#suggest {
+display: none;
+margin: 0;
+padding-top: 0;
+padding-bottom: 0
+}
+
+#warn {
+margin: 0;
+}
+#heading {
+margin: 10px
+}
+
+.loginDiv {
+display: none
+}
+/* Sign up area ends here  */
 
 
 .eventlabel {

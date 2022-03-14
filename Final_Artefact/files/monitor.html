@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Measure Driver Behaviour</title>
+    <link rel="stylesheet" href="/index.css">
+  </head>
+  <body>
+
+      <nav class="nav">
+        <div class="header">
+          <a href="monitor.html" id="homeLink">Home</a>
+        </div>
+        <div class="header">
+          <a href="result.html" id="resultLink">Results</a>
+        </div>
+        <div class="header">
+          <p id="loginLink"> Log out </p>
+        </div>
+      </nav>
+
+      <div class="main">
+        <button id="ss" type="button" name="button">START</button>
+        <span id="measuringState"> Not measuring </span>
+      </div>
+
+      <p id="timer">Timer : 0</p>
+      <div class="accMain">
+        <h3>Accelerometer Data: </h3>
+        <span>X : </span>
+        <span>Y : </span>
+        <span>Z : </span>
+      </div>
+
+      <div class="gyroMain">
+        <h3>Gyroscope Data: </h3>
+        <span>X : </span>
+        <span>Y : </span>
+        <span>Z : </span>
+      </div>
+
+      <div class="gpsMain">
+        <h3>GPS data: </h3>
+        <span>Latitude : </span>
+        <span>Longitude : </span>
+      </div>
+
+      <div class="results">
+
+      </div>
+
+    <script src="monitor.js" type="module"></script>
+    <script src="test.js" type="module"></script>
+
+  </body>
+</html>
