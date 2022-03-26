@@ -75,9 +75,9 @@ app.post('/data', bodyParser({limit: '1gb'}), async (req, res) => {
     overspeeding: overSpeed,
     eventDate: req.body.date
   };
-  console.log(journeyEvents);
+  // console.log(journeyEvents);
   const postEventData = await db.storeJourney(journeyEvents);
-  console.log(postEventData);
+  // console.log(postEventData);
   res.json()
 });
 
