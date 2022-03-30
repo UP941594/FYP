@@ -171,7 +171,7 @@ async function changeButtonState() {
       body: JSON.stringify(eventData)
       // body: JSON.stringify(bothEventsType)
     }).then(async function() {
-        await showResultsUI();
+        // await showResultsUI();
         allEvents.length = 0;
         brakeEvents.length = 0;
         gpsEvents.length = 0;

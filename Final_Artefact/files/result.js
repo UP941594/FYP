@@ -99,11 +99,13 @@ function showOverallRating(minOverspeed, minAcc) {
   let totalManeuver = 1;
   let totalBraking = 1;
   for(const interval of speedData) {
-    if(Number(interval[1].split(' ')[0])) {
-      const roadSpeed = Number(interval[1].split(' ')[0]);
-      const yourSpeed = Number(interval[2].split(' ')[0]);
-      if((roadSpeed - yourSpeed) > minOverspeed) {
-        totalSpeeds++
+    if(interval.every((item) => item !== null)) {
+      if(Number(interval[1].split(' ')[0])) {
+        const roadSpeed = Number(interval[1].split(' ')[0]);
+        const yourSpeed = Number(interval[2].split(' ')[0]);
+        if((roadSpeed - yourSpeed) > minOverspeed) {
+          totalSpeeds++
+        }
       }
     }
   }

@@ -5,6 +5,7 @@ import fetch from 'node-fetch';
 import uuid from 'uuid-random';
 import haversine from 'haversine';
 import bodyParser from 'body-parser'
+import clipboardy  from 'clipboardy'
 
 import * as ml from './serverComponents/ml.js';
 import * as db from './serverComponents/db.js';
@@ -46,6 +47,9 @@ app.get('/:userId/:date', async (req, res) => {
 app.post('/data', bodyParser({limit: '1gb'}), async (req, res) => {
   console.log('Size: ', req.get("content-length")/1000000);
   console.log(req.body.date);
+  // clipboardy.writeSync(JSON.stringify(req.body.gps));
+  // console.log(req.body.gps);
+  // return
   // console.log(req.body);
   // ARG 1: ALL COLLECTED CORRDS // ARG 2: EACH LAT/LONG IS 14 DIGITS LONG SO WE ONLY CONSIDERING FIRST 6
   const extracted = await acc.extractGPSlocations(req.body.gps, 6);
@@ -93,7 +97,7 @@ function extractBrakeANDOtherEvents(events, type) {
 
 const server = https.createServer(httpsOptions, app)
 app.use(express.static('files'));
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.json({limit: '1gb'}));
 // server.addListener('upgrade',  (req, res, head) => console.log('UPGRADE:', req.url));
 server.listen(port, () => {
   console.log('server running at ' + port)
