@@ -12,10 +12,12 @@ import haversine from 'haversine';
 // FIRST PARAM = ALL COLLECTED GPS COORDINATES DURING JOURNEY
 // TIME BETWEEN SPEED CHECKING = FOR EX. CHECK SPEED EVERY 4 SECONDS
 // THIRD PARAM = MIN SPEED TO TARGET = IF DRIVER EXCEEDS 30mph THEN WE CHECK ROAD SPEED LIMIT
-function findSpeedIntervals(coords, secs, minSpeed) {
+export function findSpeedIntervals(coords, secs, minSpeed) {
   const exceededIntervals = [];
-  if(coords.length > 120) {
-    for (let i = 0; i < coords.length; i=i+secs*60) {
+  // if(coords.length > 120) {
+  if(coords.length > 2) {
+    // for (let i = 0; i < coords.length; i=i+secs*60) {
+    for (let i = 0; i < coords.length; i++) {
         if(coords[i+1]) {
           let [start, end] = [{latitude: coords[i].lat, longitude: coords[i].lon}, {latitude: coords[i+1].lat, longitude: coords[i+1].lon}];
           let calculatedSpeed =  haversine(start, end, {unit: 'mile'}) * (3600/secs);
@@ -34,7 +36,7 @@ function findSpeedIntervals(coords, secs, minSpeed) {
 // https://www.overpass-api.de/api/interpreter?data=[out:json];way(around:2000,50.79247155933518,-1.1011859610339103)[maxspeed];out;
 
 // THIS FUNCTION IS USED TO SAVE ALL NEARBY ROADS DATA INTO JSON
-async function getallRoads([radius, lat, lon]) {
+export async function getallRoads([radius, lat, lon]) {
   const response = await fetch(`https://www.overpass-api.de/api/interpreter?data=[out:json];way(around:${radius},${lat},${lon})[maxspeed];out;`);
   const data = await response.json();
   fs.writeFile("allRoads.json", JSON.stringify(data), function(err, result) {
@@ -45,7 +47,7 @@ async function getallRoads([radius, lat, lon]) {
 
 // getallRoads([2000, 50.89885580678837,-1.3892447980722])
 
-async function getsingleRoad(lat, lon) {
+export async function getsingleRoad(lat, lon) {
   const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`);
     if(response.ok) {
       const data = await response.json();
@@ -55,7 +57,7 @@ async function getsingleRoad(lat, lon) {
 }
 // FINDS SMALL AND BIG LAT&LONG TO GET THE RADIUS
 // THE RADIUS IS USED TO FETCH ALL ROADS WITHIN GIVEN RADIUS && RETURN MID LAT&LON FOR USE
-function findMaxRadius(coords) {
+export function findMaxRadius(coords) {
   if(coords.length > 0) {
     let [start, end] = [{latitude: 0, longitude: 0}, {latitude: 0, longitude: 0}];
     let midCoords = {}
@@ -75,24 +77,28 @@ function findMaxRadius(coords) {
 
 export async function calculateSpeed(coords, seconds) {
   // STORES ALL RELEVANT ROADS INTO ARRAY FOR OVER-SPEEDING MEASUREMENT
-  // const allRoadsData = await getallRoads(findMaxRadius(coords));
-  function fileContent(path, format) {
-    return new Promise(function (resolve, reject) {
-      fs.readFile(path, format, function(error, contents) {
-        if (error) reject(error);
-        else resolve(contents);
-      });
-    });
-  }
-  let allRoadsData = JSON.parse(await fileContent('allRoads.json', 'utf8'));
-  // console.log('ALL ROADS: ' + allRoadsData.elements.length);
-  const exceededIntervals = await findSpeedIntervals(coords, seconds, 0);
   const allIntervals = [];
-  if(exceededIntervals.length > 0) {
-    // console.log('EXCEEDED: ' + exceededIntervals.length);
-    for(const each of exceededIntervals) {
-      const eachRoadCalculation = await matchSingleRoadSpeed(allRoadsData, each);
-      allIntervals.push(eachRoadCalculation)
+  if(coords.length > 0) {
+    // const allRoadsData = await getallRoads(findMaxRadius(coords));
+    function fileContent(path, format) {
+      return new Promise(function (resolve, reject) {
+        fs.readFile(path, format, function(error, contents) {
+          if (error) reject(error);
+          else resolve(contents);
+        });
+      });
+    }
+    let allRoadsData = JSON.parse(await fileContent('allRoads.json', 'utf8'));
+    // console.log('ALL ROADS: ' + allRoadsData.elements.length);
+    const exceededIntervals = await findSpeedIntervals(coords, seconds, 0);
+    if(exceededIntervals.length > 0) {
+      // console.log('EXCEEDED: ' + exceededIntervals.length);
+      for(const each of exceededIntervals) {
+        const eachRoadCalculation = await matchSingleRoadSpeed(allRoadsData, each);
+        if(eachRoadCalculation !== undefined) {
+          allIntervals.push(eachRoadCalculation)
+        }
+      }
     }
   }
   return allIntervals
@@ -113,7 +119,7 @@ async function matchSingleRoadSpeed(allroads, eachRoad) {
     if(res1 && res2 ) {
       if(res1.maxspeed === res2.maxspeed) {
         const speed = Number(res1.maxspeed.split(' ')[0]);
-        if(speed > eachRoad[0].speed) {
+        if(speed < eachRoad[0].speed) {
           // SPEED EXCEEDED
           return {
             roadName: res1.name,
@@ -122,12 +128,14 @@ async function matchSingleRoadSpeed(allroads, eachRoad) {
             time: eachRoad[0].time
           }
         }
-      } else {
-         console.log('IGNORE CUZ BOTH ROADS SPEED NOT AVAILABLE IN DATABASE');
       }
-    } else {
-       console.log('TRAVELLED ON 2 ROADS SO CANNNOT CALCULATE');
+      // else {
+      //    console.log('IGNORE CUZ BOTH ROADS SPEED NOT AVAILABLE IN DATABASE');
+      // }
     }
+    // else {
+    //    console.log('TRAVELLED ON 2 ROADS SO CANNNOT CALCULATE');
+    // }
   }
-  return {}
+  return
 }
