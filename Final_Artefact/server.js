@@ -5,8 +5,7 @@ import fetch from 'node-fetch';
 import uuid from 'uuid-random';
 import haversine from 'haversine';
 import bodyParser from 'body-parser'
-import clipboardy  from 'clipboardy'
-
+// import clipboardy  from 'clipboardy'
 import * as ml from './serverComponents/ml.js';
 import * as db from './serverComponents/db.js';
 import * as acc from './serverComponents/acceleration.js';
@@ -33,11 +32,13 @@ app.post('/users', express.json(), async (req, res) => {
 
 app.get('/data', async (req, res) => {
   // console.log(await db.testing());
-   res.json(dataset);
+   res.json(await db.getDetails('Maneuver'));
 });
 
 app.get('/:userId/:date', async (req, res) => {
+  console.log(req.params.userId, req.params.date);
   const getJourney = await db.getDayJourney(req.params.userId, req.params.date);
+  console.log(getJourney);
   res.json(getJourney);
 
 })
@@ -48,9 +49,7 @@ app.post('/data', bodyParser({limit: '1gb'}), async (req, res) => {
   console.log('Size: ', req.get("content-length")/1000000);
   console.log(req.body.date);
   // clipboardy.writeSync(JSON.stringify(req.body.gps));
-  // console.log(req.body.gps);
-  // return
-  // console.log(req.body);
+
   // ARG 1: ALL COLLECTED CORRDS // ARG 2: EACH LAT/LONG IS 14 DIGITS LONG SO WE ONLY CONSIDERING FIRST 6
   const extracted = await acc.extractGPSlocations(req.body.gps, 6);
   // ARG 1: ALL COORDS // ARG 2: EXTRACTED COORDS // ARG 3: TIME GAP TO MEASURE ACC. // ARG 4: MIN SPEED TO TEST ACC. ON
@@ -81,7 +80,6 @@ app.post('/data', bodyParser({limit: '1gb'}), async (req, res) => {
   };
   // console.log(journeyEvents);
   const postEventData = await db.storeJourney(journeyEvents);
-  // console.log(postEventData);
   res.json()
 });
 
@@ -101,4 +99,4 @@ app.use(bodyParser.json({limit: '1gb'}));
 // server.addListener('upgrade',  (req, res, head) => console.log('UPGRADE:', req.url));
 server.listen(port, () => {
   console.log('server running at ' + port)
-})
+});

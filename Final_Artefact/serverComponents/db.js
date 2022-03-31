@@ -56,7 +56,6 @@ export async function getDayJourney( userId, date) {
 export async function storeJourney(journey) {
   const db = await init();
   journey.eventId = uuid();
-  console.log(journey.eventDate);
   if(journey.maneuver.length > 0) {
     for(const each of journey.maneuver) {
       await db.run('INSERT INTO Maneuver VALUES (?,?,?,?,?)', [journey.eventId, journey.userId, each.eventType, each.eventLevel, journey.eventDate]);

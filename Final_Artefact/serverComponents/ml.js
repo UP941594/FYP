@@ -96,5 +96,6 @@ export async function init(testingData) {
     testingSequences.push(each[0])
   }
   const xsTest = await tf.tensor3d(testingSequences);
-  return await testModel(xsTest, testData, testingData.length)
+  const results = await testModel(xsTest, testData, testingData.length);
+  return results
 }

@@ -4,7 +4,7 @@
 
 import * as overSpeedingTestData from '../testingData/over-speedingTestData.js';
 import * as overSpeedingFunctions from '../serverComponents/over-speeding.js';
-
+// CHANGE TESTING CODE
 describe('Over-speeding functions testing', () => {
   const extractedCoords = overSpeedingTestData.realSpeedData();
   const findMaxRadius = overSpeedingFunctions.findMaxRadius(extractedCoords);
@@ -28,7 +28,7 @@ describe('Over-speeding functions testing', () => {
             })
         ]));
       } catch (e) {
-        console.log('ERROR: ROAD NOT FOUND!! ', road);
+        console.log('ERROR: ROAD NOT FOUND ==> ', road);
       }
     });
   })

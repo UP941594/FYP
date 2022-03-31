@@ -58,6 +58,7 @@ async function getData(e) {
       if(response.ok) { data = await response.json()}
     }
     // console.log(e);
+    console.log(data, date.value);
     extractDataIntoArrays(data)
 }
 
