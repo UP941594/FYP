@@ -1,7 +1,11 @@
+TO UPGRADE NODE JS
+nvm install stable --reinstall-packages-from=current 
+
+--------------------------------
 TO INSTALL TFJS-NODE
 
 npm install @tensorflow/tfjs-node
-
+--------------------------
 TO INSTALL SQLITE3
 
 npm rebuild

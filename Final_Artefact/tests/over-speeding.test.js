@@ -42,6 +42,7 @@ describe('Over-speeding functions testing', () => {
     const expectedRoadNames = ['Northumberland Road', 'Derby Road'];
     try {
       const speedIntervals = await overSpeedingFunctions.calculateSpeed(extractedCoords, seconds, minSpeed);
+      console.log(speedIntervals);
       speedIntervals.forEach((interval) => {
         allRecievedRoadNames.push(interval.roadName)
       });
@@ -50,5 +51,5 @@ describe('Over-speeding functions testing', () => {
     }
     expect(allRecievedRoadNames).toEqual(expect.arrayContaining(expectedRoadNames));
     // expect(await overSpeedingFunctions.getsingleRoad()).toBeNull();
-  }, 30000) // WAIT FOR ROAD API CALLS TO FINISH
+  }, 50000) // WAIT FOR ROAD API CALLS TO FINISH
 })

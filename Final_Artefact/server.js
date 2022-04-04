@@ -49,7 +49,7 @@ app.post('/data', bodyParser({limit: '1gb'}), async (req, res) => {
   console.log('Size: ', req.get("content-length")/1000000);
   console.log(req.body.date);
   // clipboardy.writeSync(JSON.stringify(req.body.gps));
-
+  console.log(req.body.normal);
   // ARG 1: ALL COLLECTED CORRDS // ARG 2: EACH LAT/LONG IS 14 DIGITS LONG SO WE ONLY CONSIDERING FIRST 6
   const extracted = await acc.extractGPSlocations(req.body.gps, 6);
   // ARG 1: ALL COORDS // ARG 2: EXTRACTED COORDS // ARG 3: TIME GAP TO MEASURE ACC. // ARG 4: MIN SPEED TO TEST ACC. ON
@@ -80,7 +80,8 @@ app.post('/data', bodyParser({limit: '1gb'}), async (req, res) => {
   };
   // console.log(journeyEvents);
   const postEventData = await db.storeJourney(journeyEvents);
-  res.json()
+  res.setHeader('Content-Type', 'application/json');
+  res.send({ data: 'DONE' })
 });
 
 
@@ -97,6 +98,6 @@ const server = https.createServer(httpsOptions, app)
 app.use(express.static('files'));
 app.use(bodyParser.json({limit: '1gb'}));
 // server.addListener('upgrade',  (req, res, head) => console.log('UPGRADE:', req.url));
-server.listen(port, () => {
+app.listen(port, () => {
   console.log('server running at ' + port)
 });

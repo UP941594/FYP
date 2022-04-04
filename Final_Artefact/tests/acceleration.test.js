@@ -25,7 +25,7 @@ describe('Acceleration functions testing', () => {
   });
 // TESTED ON COORDS EXTRACTED FROM GOOGLE MAP AND RETURNED EXPECTED RESULTS
 // COORDS CAN FOUND IN accTestData.js file in testingData
-  test('Find distance of present extracted coords', () => {
+  test('Find acceleration of present extracted coords', () => {
     const extractedCoords = acc.extractGPSlocations(accTestData.realgpsData(),6);
     const allCoords = accTestData.realgpsData();
     const seconds = 4;

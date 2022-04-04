@@ -10,7 +10,7 @@ function smoothDataSet(data) {
   return allData
 }
 
-function maskData(array) {
+export function maskData(array) {
   let newArr = smoothDataSet(array);
   const big = 236
   for(let each of newArr) {

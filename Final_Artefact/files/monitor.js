@@ -165,17 +165,20 @@ async function changeButtonState() {
       gps: gpsEvents,
       date: new Date().toISOString().split('T')[0]
     }
-    const response = await fetch('/data', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(eventData)
-      // body: JSON.stringify(bothEventsType)
-    }).then(async function() {
-        // await showResultsUI();
+    if(eventData.normal.length > 0) {
+      const response = await fetch('/data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(eventData)
+        // body: JSON.stringify(bothEventsType)
+      });
         allEvents.length = 0;
         brakeEvents.length = 0;
         gpsEvents.length = 0;
-    }())
+        if(response.ok) {
+          alert('Visit Results Section for Your Score')
+        }
+    }
   }
 }
 // SORTING GYROSCOPE AXIS TO ROTATIONAL SPEED NOT RATE
