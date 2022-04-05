@@ -36,7 +36,7 @@ export function showDistance(allCoords, extractedCoords, secs, limit) {
           allAcceleration.push({speed: (acc).toFixed(2) + ' mph', time: res.time});
         }
       } else {
-        console.log('NOT ', coor);
+        // console.log('NOT ', coor);
       }
     });
     return allAcceleration

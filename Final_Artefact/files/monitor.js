@@ -175,6 +175,8 @@ async function changeButtonState() {
         allEvents.length = 0;
         brakeEvents.length = 0;
         gpsEvents.length = 0;
+        console.log(response);
+        alert(response.status)
         if(response.ok) {
           alert('Visit Results Section for Your Score')
         }

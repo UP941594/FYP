@@ -49,11 +49,11 @@ app.post('/data', bodyParser({limit: '1gb'}), async (req, res) => {
   console.log('Size: ', req.get("content-length")/1000000);
   console.log(req.body.date);
   // clipboardy.writeSync(JSON.stringify(req.body.gps));
-  console.log(req.body.normal);
+  // console.log(req.body.normal);
   // ARG 1: ALL COLLECTED CORRDS // ARG 2: EACH LAT/LONG IS 14 DIGITS LONG SO WE ONLY CONSIDERING FIRST 6
-  const extracted = await acc.extractGPSlocations(req.body.gps, 6);
+  const extracted = await acc.extractGPSlocations(req.body.gps, 3);
   // ARG 1: ALL COORDS // ARG 2: EXTRACTED COORDS // ARG 3: TIME GAP TO MEASURE ACC. // ARG 4: MIN SPEED TO TEST ACC. ON
-  const showDistance = await acc.showDistance(req.body.gps, extracted, 4, 5)
+  const showDistance = await acc.showDistance(req.body.gps, extracted, 4, 30)
   console.log('Acc: ', showDistance);
   console.log('--------------------------------------------------');
   // // ------------------------------------------------------------------------
@@ -65,7 +65,7 @@ app.post('/data', bodyParser({limit: '1gb'}), async (req, res) => {
   // // dataset.push(testModel)
   // // ------------------------------------------------------------------------
   // ARG 1: ALL GPS COORDS // ARG 2: TIME GAP TO MEASURE SPEED IN SECS
-  const overSpeed = await speed.calculateSpeed(req.body.gps, 1);
+  const overSpeed = await speed.calculateSpeed(req.body.gps, 4);
   console.log(overSpeed);
     console.log('--------------------------------------------------');
   // return res.json()

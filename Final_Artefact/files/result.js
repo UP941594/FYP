@@ -8,7 +8,7 @@ const logout = document.querySelector('#loginLink');
 const selectJourney = document.querySelector('#selectJourney');
 const emojis = [['Emoji', 'Rating Score', 'User Mood'],['😠',1,  'Very unsatisfied'],['😦',2, 'Unsatisfied'],['😑',3, 'Neutral'],['😀',4, 'Satisfied'],['😍',5, 'Very satisfied']];
 const speedData = [['Road name', 'Road speed', 'Your speed']]
-const accData = [['Number', 'Acc speed', 'Time']]
+const accData = [['Acc speed', 'Date', 'Time']]
 const maneuverData = [['Event Type', 'Aggression', 'Date']];
 const brakeData = [['Event Type', 'Aggression', 'Date']];
 
@@ -69,8 +69,9 @@ function extractDataIntoArrays(journeyEvents) {
   [speedData.length, accData.length, maneuverData.length, brakeData.length] = [1,1,1,1];
   if(journeyEvents.acceleration.length > 0) {
     journeyEvents.acceleration.forEach((acc, i) => {
+      const time = (new Date(Number('' + acc.eventTime + '000')) + '').split(' ')[4]
       //String(new Date(acc.eventTime)).split(' ')[4]]
-      accData.push([i+1, acc.speed, String(acc.eventDate)])
+      accData.push([acc.speed, String(acc.eventDate), time])
     });
   }
   if(journeyEvents.overspeeding.length > 0) {

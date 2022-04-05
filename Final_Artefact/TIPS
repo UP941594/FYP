@@ -1,5 +1,5 @@
 TO UPGRADE NODE JS
-nvm install stable --reinstall-packages-from=current 
+nvm install stable --reinstall-packages-from=current
 
 --------------------------------
 TO INSTALL TFJS-NODE
@@ -10,3 +10,6 @@ TO INSTALL SQLITE3
 
 npm rebuild
 npm i sqlite3
+
+
+//[[ -s $HOME/.nvm/nvm.sh ]] && . $HOME/.nvm/nvm.sh  # This loads NVM
