@@ -42,7 +42,6 @@ export async function getallRoads([radius, lat, lon]) {
   fs.writeFile("allRoads.json", JSON.stringify(data), function(err, result) {
       if(err) console.log('error', err);
   });
-  console.log(data);
   return data
 }
 
@@ -120,6 +119,7 @@ async function matchSingleRoadSpeed(allroads, eachRoad) {
     if(res1 && res2 ) {
       if(res1.maxspeed === res2.maxspeed) {
         const speed = Number(res1.maxspeed.split(' ')[0]);
+        // console.log(eachRoad[0].speed, speed, speed > eachRoad[0].speed);
         if(speed < eachRoad[0].speed) {
           // SPEED EXCEEDED
           return {

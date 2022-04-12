@@ -47,7 +47,7 @@ app.get('/:userId/:date', async (req, res) => {
 // MEANING THE GPS COORDINATES ARE ACCURATE
 app.post('/data', bodyParser({limit: '1gb'}), async (req, res) => {
   console.log('Size: ', req.get("content-length")/1000000);
-  console.log(req.body.date);
+  console.log(new Date());
   // clipboardy.writeSync(JSON.stringify(req.body.gps));
   // console.log(req.body.normal);
   // ARG 1: ALL COLLECTED CORRDS // ARG 2: EACH LAT/LONG IS 14 DIGITS LONG SO WE ONLY CONSIDERING FIRST 6
@@ -98,6 +98,6 @@ const server = https.createServer(httpsOptions, app)
 app.use(express.static('files'));
 app.use(bodyParser.json({limit: '1gb'}));
 // server.addListener('upgrade',  (req, res, head) => console.log('UPGRADE:', req.url));
-app.listen(port, () => {
+server.listen(port, () => {
   console.log('server running at ' + port)
 });

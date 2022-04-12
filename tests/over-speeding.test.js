@@ -28,7 +28,7 @@ describe('Over-speeding functions testing', () => {
             })
         ]));
       } catch (e) {
-        console.log('ERROR: ROAD NOT FOUND ==> ', road);
+        // console.log('ERROR: ROAD NOT FOUND ==> ', road);
       }
     });
   })
@@ -42,7 +42,6 @@ describe('Over-speeding functions testing', () => {
     const expectedRoadNames = ['Northumberland Road', 'Derby Road'];
     try {
       const speedIntervals = await overSpeedingFunctions.calculateSpeed(extractedCoords, seconds, minSpeed);
-      console.log(speedIntervals);
       speedIntervals.forEach((interval) => {
         allRecievedRoadNames.push(interval.roadName)
       });
