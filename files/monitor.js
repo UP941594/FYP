@@ -51,7 +51,7 @@ async function getPermission() {
       navigator.geolocation.getCurrentPosition((position) => {
         location = true
         if(measuring === false) {
-          alert('PLEASE FOLLOW THESE INSTUCTIONS: \n  \n \u2022 Do not use your mobile phone\n \u2022 Do not move your phone\n \u2022 Avoid phone calls');
+          alert('PLEASE FOLLOW THESE INSTUCTIONS: \n  \n \u2022 Do not use your mobile phone\n \u2022 Do not move your phone\n \u2022 Avoid phone calls\n \u2022 Keep your phone attached to windshield mount');
         }
         changeButtonState();
       },(err)=>{if(err){
