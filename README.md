@@ -6,8 +6,7 @@ This mobile website allows car drivers to measure their driving behaviours using
 
 1. ```npm install```
 2. ```npm install @tensorflow/tfjs-node```
-3. ```npm rebuild
-      npm i sqlite3```
+3. ```npm rebuild \n npm i sqlite3```
 4. ```npm start```
 
 
