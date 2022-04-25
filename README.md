@@ -30,7 +30,7 @@ Users:
 * will be asked to follow provided instructions.
 * can stop monitoring their behaviour.
 
-### Viewing Driving Behaviour Results
+### Viewing Driving Behaviour Results (result.html)
 
 Users:
 
