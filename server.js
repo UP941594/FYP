@@ -10,6 +10,7 @@ import * as ml from './serverComponents/ml.js';
 import * as db from './serverComponents/db.js';
 import * as acc from './serverComponents/acceleration.js';
 import * as speed from './serverComponents/over-speeding.js';
+import * as overSpeedingTestData from './testingData/over-speedingTestData.js';
 
 const app = express();
 const port = 8080;
@@ -51,40 +52,40 @@ app.post('/data', bodyParser({limit: '1gb'}), async (req, res) => {
   // clipboardy.writeSync(JSON.stringify(req.body.gps));
   // console.log(req.body.normal);
   // ARG 1: ALL COLLECTED CORRDS // ARG 2: EACH LAT/LONG IS 14 DIGITS LONG SO WE ONLY CONSIDERING FIRST 6
-  const extracted = await acc.extractGPSlocations(req.body.gps, 3);
+  // const extracted = await acc.extractGPSlocations(req.body.gps, 3);
   // ARG 1: ALL COORDS // ARG 2: EXTRACTED COORDS // ARG 3: TIME GAP TO MEASURE ACC. // ARG 4: MIN SPEED TO TEST ACC. ON
-  const showDistance = await acc.showDistance(req.body.gps, extracted, 4, 30)
-  console.log('Acc: ', showDistance);
-  console.log('--------------------------------------------------');
+  // const showDistance = await acc.showDistance(req.body.gps, extracted, 4, 30)
+  // console.log('Acc: ', showDistance);
+  // console.log('--------------------------------------------------');
   // // ------------------------------------------------------------------------
-  const testModel = await ml.init(req.body.normal);
-  const testBraking = await ml.init(req.body.braking);
-  console.log('All: ', extractBrakeANDOtherEvents(testModel, 'NON AGGRESSIVE'));
-  console.log('Braking: ', extractBrakeANDOtherEvents(testBraking, 'BRAKING'));
-  console.log('--------------------------------------------------');
+  // const testModel = await ml.init(req.body.normal);
+  // const testBraking = await ml.init(req.body.braking);
+  // console.log('All: ', extractBrakeANDOtherEvents(testModel, 'NON AGGRESSIVE'));
+  // console.log('Braking: ', extractBrakeANDOtherEvents(testBraking, 'BRAKING'));
+  // console.log('--------------------------------------------------');
   // // dataset.push(testModel)
   // // ------------------------------------------------------------------------
   // ARG 1: ALL GPS COORDS // ARG 2: TIME GAP TO MEASURE SPEED IN SECS
-  const overSpeed = await speed.calculateSpeed(req.body.gps, 4);
-  console.log(overSpeed);
+  // const overSpeed = await speed.calculateSpeed(speed.realSpeedData(), 4);
+  fs.writeFile("gpsdata.json", JSON.stringify(req.body.gps), function(err, result) {
+      if(err) console.log('error', err);
+  });
     console.log('--------------------------------------------------');
   // return res.json()
-  const journeyEvents = {
-    userId: req.body.userId,
-    eventId: undefined,
-    maneuver: extractBrakeANDOtherEvents(testModel, 'NON AGGRESSIVE'),
-    braking: extractBrakeANDOtherEvents(testBraking, 'BRAKING'),
-    acceleration: showDistance,
-    overspeeding: overSpeed,
-    eventDate: req.body.date
-  };
+  // const journeyEvents = {
+  //   userId: req.body.userId,
+  //   eventId: undefined,
+  //   maneuver: extractBrakeANDOtherEvents(testModel, 'NON AGGRESSIVE'),
+  //   braking: extractBrakeANDOtherEvents(testBraking, 'BRAKING'),
+  //   acceleration: showDistance,
+  //   overspeeding: overSpeed,
+  //   eventDate: req.body.date
+  // };
   // console.log(journeyEvents);
-  const postEventData = await db.storeJourney(journeyEvents);
+  // const postEventData = await db.storeJourney(journeyEvents);
   res.setHeader('Content-Type', 'application/json');
   res.send({ data: 'DONE' })
 });
-
-
 
 function extractBrakeANDOtherEvents(events, type) {
   if(type === 'BRAKING') {

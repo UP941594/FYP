@@ -1,0 +1,54 @@
+const todayJourney =  {
+  userId: 'c08e9ea4-f0a8-43be-9fa2-a8c83594ec9c',
+  eventId: undefined,
+  maneuver: [
+    { eventType: 'LEFT CURVE', eventLevel: 75.3 },
+    { eventType: 'RIGHT CURVE', eventLevel: 79.9 },
+    { eventType: 'LEFT CURVE', eventLevel: 85.3 },
+    { eventType: 'RIGHT CURVE', eventLevel: 96.2 },
+],
+
+
+
+  braking: [
+    { eventType: 'BRAKING', eventLevel: 88.5 },
+    { eventType: 'BRAKING', eventLevel: 52.9 },
+    { eventType: 'BRAKING', eventLevel: 98.5 },
+    { eventType: 'BRAKING', eventLevel: 75.3 },
+  ],
+
+
+
+  acceleration: [
+    {speed: "61 mph", time: 1652868886},
+    {speed: "57.71 mph", time: 1652868886},
+    {speed: "56 mph", time: 1652868886},
+    {speed: "57 mph", time: 1652868886},
+  ],
+
+
+
+  overspeeding: [
+  {
+    roadName: 'Durnford Road',
+    roadSpeed: '30 mph',
+    yourSpeed: 37.5 + ' mph',
+    time: 1652868886
+  },
+  {
+    roadName: 'Graham Road',
+    roadSpeed: '30 mph',
+    yourSpeed: 32.5 + ' mph',
+    time: 1652868886
+  },
+  {
+    roadName: 'Bhullar Road',
+    roadSpeed: '30 mph',
+    yourSpeed: 36.2 + ' mph',
+    time: 1652868886
+  }
+],
+
+
+  eventDate: '2022-04-28'
+}

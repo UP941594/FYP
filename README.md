@@ -1,6 +1,6 @@
 # Measuring Driving Behaviour Using Phone Sensors and API’s
 
-This mobile website allows car drivers to measure their driving behaviours using mobile devices. The LSTM model used in ```server.js``` can be found in this repository (https://github.com/UP941594/LSTM) 
+This mobile website allows car drivers to measure their driving behaviours using mobile devices.
 
 ## HOW TO START WEBSITE IN COMMAND PROMPT
 

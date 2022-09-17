@@ -14,10 +14,10 @@ import haversine from 'haversine';
 // THIRD PARAM = MIN SPEED TO TARGET = IF DRIVER EXCEEDS 30mph THEN WE CHECK ROAD SPEED LIMIT
 export function findSpeedIntervals(coords, secs, minSpeed) {
   const exceededIntervals = [];
-  if(coords.length > 120) {
-  // if(coords.length > 2) {
-    for (let i = 0; i < coords.length; i=i+secs*60) {
-    // for (let i = 0; i < coords.length; i++) {
+  // if(coords.length > 120) {
+  if(coords.length > 2) {
+    // for (let i = 0; i < coords.length; i=i+secs*60) {
+    for (let i = 0; i < coords.length; i++) {
         if(coords[i+1]) {
           let [start, end] = [{latitude: coords[i].lat, longitude: coords[i].lon}, {latitude: coords[i+1].lat, longitude: coords[i+1].lon}];
           let calculatedSpeed =  haversine(start, end, {unit: 'mile'}) * (3600/secs);
