@@ -122,13 +122,22 @@ function getSensorAxis(e) {
     brakeEvents.push(e.accelerationIncludingGravity.y)
 }
 // DISPLAYS GPS DATA AND PUTS INTO ARRAY ==MAIN FUNCTION
+let options = {
+  enableHighAccuracy: true
+}
 function getGPS() {
+  let id;
   if(navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(async (position) => {
+    id = navigator.geolocation.watchPosition(success)
+    async function success(position){
+      console.log(position);
       gpsMain.childNodes[3].textContent = 'Latitude : ' + position.coords.latitude;
       gpsMain.childNodes[5].textContent = 'Longitude : ' + position.coords.longitude;
       gpsEvents.push({lat: position.coords.latitude, lon: position.coords.longitude, time: Math.round(Date.now() / 1000)})
-    })
+    }
+    if(!measuring) {
+       navigator.geolocation.clearWatch(id);
+    }
   }
 }
 

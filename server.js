@@ -10,7 +10,6 @@ import * as ml from './serverComponents/ml.js';
 import * as db from './serverComponents/db.js';
 import * as acc from './serverComponents/acceleration.js';
 import * as speed from './serverComponents/over-speeding.js';
-import * as overSpeedingTestData from './testingData/over-speedingTestData.js';
 
 const app = express();
 const port = 8080;
@@ -20,7 +19,6 @@ const httpsOptions = {
   key: fs.readFileSync('key/key.pem'),
   cert: fs.readFileSync('key/cert.pem')
 };
-
 // USER ACCOUNTS HANDLERS
 app.get('/users', async (req, res) => {
   const details = await db.getDetails('User');
@@ -33,6 +31,7 @@ app.post('/users', express.json(), async (req, res) => {
 
 app.get('/data', async (req, res) => {
   // console.log(await db.testing());
+
    res.json(await db.getDetails('Maneuver'));
 });
 
@@ -46,9 +45,20 @@ app.get('/:userId/:date', async (req, res) => {
 
 // GPS LOCATION ACCESSES 60 DATASETS IN ONE SECONDS WITH DATA IN VARIANCE
 // MEANING THE GPS COORDINATES ARE ACCURATE
+let str = ''
 app.post('/data', bodyParser({limit: '1gb'}), async (req, res) => {
   console.log('Size: ', req.get("content-length")/1000000);
   console.log(new Date());
+  console.log(req.body.gps);
+  for (let i = 0; i < req.body.gps.length; i++) {
+    let coord = req.body.gps[i]
+    str += `${i+1}, ${coord.lat}, ${coord.lon} \n`
+  }
+  console.log(str);
+  // TURNS GPS INTO CSV FILE TO VIEW IN GOOGLE MAPS (RAODS VISITED)
+  fs.writeFile("my.csv", str, function(err, result) {
+      if(err) console.log('error', err);
+  });
   // clipboardy.writeSync(JSON.stringify(req.body.gps));
   // console.log(req.body.normal);
   // ARG 1: ALL COLLECTED CORRDS // ARG 2: EACH LAT/LONG IS 14 DIGITS LONG SO WE ONLY CONSIDERING FIRST 6

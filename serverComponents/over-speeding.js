@@ -7,20 +7,49 @@ import haversine from 'haversine';
 // 2. matchSingleRoadSpeed function needs less than road speed not bigger;
 // 3. getallRoads function should get called frequently
 // 4. yourSpeed: (eachRoad[0].speed) + ' mph', use tofixed()
+let str = ''
+async function measureSpeed() {
+  // READS GPS DATA FROM A JSON FILE
+  // function fileContent(path, format) {
+  //   return new Promise(function (resolve, reject) {
+  //     fs.readFile(path, format, function(error, contents) {
+  //       if (error) reject(error);
+  //       else resolve(contents);
+  //     });
+  //   });
+  // }
+  // let overSpeedingTestData = JSON.parse(await fileContent('../gpsdata.json', 'utf8'));
+  // console.log(overSpeedingTestData);
+  // for (let i = 0; i < overSpeedingTestData.length; i++) {
+  //   let coord = overSpeedingTestData[i]
+  //   str += `${i+1}, ${coord.lat}, ${coord.lon} \n`
+  // }
+  // console.log(str);
+  // // TURNS GPS INTO CSV FILE TO VIEW IN GOOGLE MAPS (RAODS VISITED)
+  // fs.writeFile("my.csv", str, function(err, result) {
+  //     if(err) console.log('error', err);
+  // });
+  // const overSpeed = await calculateSpeed(overSpeedingTestData, 6);
+  // console.log(overSpeed);
+}
 
-
+measureSpeed()
 // FIRST PARAM = ALL COLLECTED GPS COORDINATES DURING JOURNEY
 // TIME BETWEEN SPEED CHECKING = FOR EX. CHECK SPEED EVERY 4 SECONDS
 // THIRD PARAM = MIN SPEED TO TARGET = IF DRIVER EXCEEDS 30mph THEN WE CHECK ROAD SPEED LIMIT
 export function findSpeedIntervals(coords, secs, minSpeed) {
   const exceededIntervals = [];
-  // if(coords.length > 120) {
-  if(coords.length > 2) {
-    // for (let i = 0; i < coords.length; i=i+secs*60) {
-    for (let i = 0; i < coords.length; i++) {
-        if(coords[i+1]) {
-          let [start, end] = [{latitude: coords[i].lat, longitude: coords[i].lon}, {latitude: coords[i+1].lat, longitude: coords[i+1].lon}];
+  let counter = 0
+  if(coords.length > 120) {
+  // if(coords.length > 2) {
+    for (let i = 0; i < coords.length; i=i+secs*60) {
+      counter++
+      // console.log(i+secs*60);
+    // for (let i = 0; i < coords.length; i++) {
+        if(coords[i+secs*60]) {
+          let [start, end] = [{latitude: coords[i].lat, longitude: coords[i].lon}, {latitude: coords[i+secs*60].lat, longitude: coords[i+secs*60].lon}];
           let calculatedSpeed =  haversine(start, end, {unit: 'mile'}) * (3600/secs);
+          console.log('CALCULATED SPEED: ',calculatedSpeed, start, end);
           if(calculatedSpeed > minSpeed) {
             const obj = [{lat: coords[i].lat, lon: coords[i].lon, time: coords[i].time, speed: calculatedSpeed},
                          {lat: coords[i+1].lat, lon: coords[i+1].lon, time: coords[i+1].time, speed: calculatedSpeed}]
@@ -29,6 +58,7 @@ export function findSpeedIntervals(coords, secs, minSpeed) {
         }
     }
   }
+  console.log('COUNTER: ', counter);
   return exceededIntervals
 }
 
@@ -88,9 +118,10 @@ export async function calculateSpeed(coords, seconds) {
         });
       });
     }
-    let allRoadsData = JSON.parse(await fileContent('allRoads.json', 'utf8'));
+    let allRoadsData = JSON.parse(await fileContent('../allRoads.json', 'utf8'));
     // console.log('ALL ROADS: ' + allRoadsData.elements.length);
     const exceededIntervals = await findSpeedIntervals(coords, seconds, 0);
+    console.log('EXCEEDED INTERVALS ', exceededIntervals);
     if(exceededIntervals.length > 0) {
       // console.log('EXCEEDED: ' + exceededIntervals.length);
       for(const each of exceededIntervals) {
@@ -120,7 +151,7 @@ async function matchSingleRoadSpeed(allroads, eachRoad) {
       if(res1.maxspeed === res2.maxspeed) {
         const speed = Number(res1.maxspeed.split(' ')[0]);
         // console.log(eachRoad[0].speed, speed, speed > eachRoad[0].speed);
-        if(speed < eachRoad[0].speed) {
+        if(speed > eachRoad[0].speed) {
           // SPEED EXCEEDED
           return {
             roadName: res1.name,
